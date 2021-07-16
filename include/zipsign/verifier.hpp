@@ -25,9 +25,11 @@ public:
         BadInvalidCertificateChain = 3,
         BadInvalidSignature = 4
     };
+    Verifier() = default;
     Verifier(std::string const & cert_file);
     ~Verifier();
     void addCertificate(std::string const & filename);
+    void addCertificateData(std::string const & data);
     Result verify(
         std::string const & filename,
         std::string const & keyring_path,

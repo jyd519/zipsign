@@ -1,11 +1,12 @@
 cmake_minimum_required (VERSION 3.1)
 project(zipsign VERSION 1.4.0)
 
-option(WITHOUT_TESTS   "disable unit tests"   OFF)
+option(WITHOUT_TESTS   "disable unit tests"  ON)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(OPENSSL REQUIRED openssl>=3.0)
+#pkg_check_modules(OPENSSL REQUIRED openssl>=3.0)
 
+find_package(OpenSSL REQUIRED)
 
 set(CMAKE_C_STANDARD 99)
 set(C_WARNINGS -Wall -Wextra -Wpedantic -Werror)
@@ -44,7 +45,8 @@ add_library(openssl++ STATIC
 )
 target_include_directories(openssl++ PUBLIC lib include ${OPENSSL_INCLUDE_DIRS})
 target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
-target_link_libraries(openssl++ PUBLIC ${OPENSSL_LINK_LIBRARIES})
+#target_link_libraries(openssl++ PUBLIC ${OPENSSL_LINK_LIBRARIES})
+target_link_libraries(openssl++ OpenSSL::Crypto)
 
 add_library(zipsign STATIC
         lib/zipsign/file.cc
@@ -54,7 +56,8 @@ add_library(zipsign STATIC
         lib/zipsign/verifier.cc
         lib/zipsign/informer.cc
 )
-target_include_directories(zipsign PRIVATE lib include)
+target_include_directories(zipsign PRIVATE lib)
+target_include_directories(zipsign PUBLIC include)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(zipsign PUBLIC openssl++ base64)
 
@@ -73,9 +76,10 @@ if(NOT WITHOUT_TESTS)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-
+find_package(GTest REQUIRED) 
 
 include (CTest)
+
 
 pkg_check_modules(GTEST REQUIRED gtest_main)
 include(GoogleTest)

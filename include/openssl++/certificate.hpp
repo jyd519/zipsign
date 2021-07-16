@@ -16,6 +16,7 @@ class Certificate
     Certificate operator=(Certificate const &) = delete;
     Certificate(Certificate const &) = delete;
 public:
+    static Certificate fromPEMData(const char* data, size_t size);
     static Certificate fromPEM(std::string const & filename);
     explicit Certificate(X509 * cert_);
     Certificate & operator=(Certificate && other);

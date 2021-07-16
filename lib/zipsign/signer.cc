@@ -28,6 +28,13 @@ Signer::~Signer()
 
 }
 
+void Signer::addSignerData(std::string const& key_data, std::string const & cert_data) {
+    auto key = PrivateKey::fromPEMData(key_data.data(), key_data.size());
+    auto cert = Certificate::fromPEMData(cert_data.data(), cert_data.size());
+    keys.push_back(std::move(key));
+    certs.push_back(std::move(cert));
+}
+
 void Signer::addSigner(std::string const key_file, std::string const & cert_file)
 {
     auto key = PrivateKey::fromPEM(key_file);

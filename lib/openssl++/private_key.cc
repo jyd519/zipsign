@@ -12,6 +12,16 @@
 namespace openssl
 {
 
+PrivateKey PrivateKey::fromPEMData(const char* data, size_t size) {
+    BasicIO key_file = BasicIO::fromMemory(data, size);
+    EVP_PKEY * key = PEM_read_bio_PrivateKey(key_file, NULL, NULL, NULL);
+    if (NULL == key)
+    {
+        throw OpenSSLException("failed to parse key file");
+    }
+    return std::move(PrivateKey(key));
+}
+
 PrivateKey PrivateKey::fromPEM(std::string const & filename)
 {
     BasicIO key_file = BasicIO::openInputFile(filename);

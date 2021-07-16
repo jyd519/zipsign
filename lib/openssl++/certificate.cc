@@ -28,6 +28,17 @@ Certificate Certificate::fromPEM(std::string const & filename)
 
 }
 
+Certificate Certificate::fromPEMData(const char* data, size_t size)
+{
+    auto cert_file = BasicIO::fromMemory(data, size);
+    X509 * cert = PEM_read_bio_X509(cert_file, NULL, NULL, NULL);
+    if (NULL == cert)
+    {
+        throw OpenSSLException("failed to parse certificate file");
+    }
+    return std::move(Certificate(cert));
+}
+
 Certificate::Certificate(X509 * cert_)
 : cert(cert_)
 {
