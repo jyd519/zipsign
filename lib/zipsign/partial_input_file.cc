@@ -7,6 +7,8 @@
 #include <cstdio>
 #include <algorithm>
 
+#include "file.hpp"
+
 using openssl::BasicIO;
 using openssl::OpenSSLException;
 
@@ -74,7 +76,7 @@ PartialInputFile::~PartialInputFile()
 
 BasicIO PartialInputFile::open(std::string const & filename, std::size_t upperLimit)
 {
-    FILE * file = fopen(filename.c_str(), "rb");
+    FILE * file = zipsign::xfopen(filename.c_str(), "rb");
     if (nullptr == file)
     {
         throw std::runtime_error("failed to open file");

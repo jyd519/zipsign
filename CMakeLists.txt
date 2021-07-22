@@ -2,9 +2,10 @@ cmake_minimum_required (VERSION 3.1)
 project(zipsign VERSION 1.4.0)
 
 option(WITHOUT_TESTS   "disable unit tests"  ON)
+option(WITH_CLI   "build cli app"  OFF)
 
-find_package(PkgConfig REQUIRED)
-#pkg_check_modules(OPENSSL REQUIRED openssl>=3.0)
+# find_package(PkgConfig REQUIRED)
+# pkg_check_modules(OPENSSL REQUIRED openssl)
 
 find_package(OpenSSL REQUIRED)
 
@@ -24,14 +25,16 @@ add_library(base64 STATIC
 target_include_directories(base64 PRIVATE lib include)
 
 
-add_library(cli STATIC
-    lib/cli/app.cc
-    lib/cli/argument.cc
-    lib/cli/default_arguments.cc
-    lib/cli/options.cc
-    lib/cli/default_verb.cc
-)
-target_include_directories(cli PRIVATE lib include)
+if(WITH_CLI)
+	add_library(cli STATIC
+		lib/cli/app.cc
+		lib/cli/argument.cc
+		lib/cli/default_arguments.cc
+		lib/cli/options.cc
+		lib/cli/default_verb.cc
+	)
+	target_include_directories(cli PRIVATE lib include)
+endif()
 
 add_library(openssl++ STATIC
     lib/openssl++/exception.cc
@@ -43,10 +46,9 @@ add_library(openssl++ STATIC
     lib/openssl++/certificate_stack.cc
     lib/openssl++/cms.cc
 )
-target_include_directories(openssl++ PUBLIC lib include ${OPENSSL_INCLUDE_DIRS})
+target_include_directories(openssl++ PRIVATE lib include)
 target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
-#target_link_libraries(openssl++ PUBLIC ${OPENSSL_LINK_LIBRARIES})
-target_link_libraries(openssl++ OpenSSL::Crypto)
+target_link_libraries(openssl++ PUBLIC OpenSSL::Crypto)
 
 add_library(zipsign STATIC
         lib/zipsign/file.cc
@@ -61,13 +63,15 @@ target_include_directories(zipsign PUBLIC include)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(zipsign PUBLIC openssl++ base64)
 
-add_executable(app
-    src/zipsign/main.cc)
-set_target_properties(app PROPERTIES OUTPUT_NAME "zipsign")
-target_include_directories(app PRIVATE include src/cli)
-target_link_libraries(app PRIVATE zipsign cli)
+if(WITH_CLI)
+	add_executable(app
+		src/zipsign/main.cc)
+	set_target_properties(app PROPERTIES OUTPUT_NAME "zipsign")
+	target_include_directories(app PRIVATE include src/cli)
+	target_link_libraries(app PRIVATE zipsign cli)
 
-install(TARGETS app DESTINATION bin)
+	install(TARGETS app DESTINATION bin)
+endif()
 
 # Unit tests
 

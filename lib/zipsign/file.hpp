@@ -11,6 +11,8 @@
 namespace zipsign
 {
 
+extern FILE* xfopen(const char* filename, const char* mode);
+
 class File
 {
     File operator=(File const &) = delete;
