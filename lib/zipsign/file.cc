@@ -100,3 +100,4 @@ void File::truncate(long offset) {
   }
 }
 
+}

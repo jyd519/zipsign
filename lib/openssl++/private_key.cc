@@ -19,7 +19,7 @@ PrivateKey PrivateKey::fromPEMData(const char* data, size_t size) {
     {
         throw OpenSSLException("failed to parse key file");
     }
-    return std::move(PrivateKey(key));
+    return PrivateKey(key);
 }
 
 PrivateKey PrivateKey::fromPEM(std::string const & filename)

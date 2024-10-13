@@ -41,6 +41,33 @@ const char kJoyTestRootCert[] =
     "MEbNMDiZKXNRMw==\n"
     "-----END CERTIFICATE-----";
 
+static const char kNewJoyTestRoot[] = "-----BEGIN CERTIFICATE-----\n"
+"MIIEUDCCAzigAwIBAgIBAjANBgkqhkiG9w0BAQsFADB4MRUwEwYDVQQDDAxKb3lU\n"
+"ZXN0IFJvb3QxETAPBgNVBAgMCFNoYW5naGFpMQswCQYDVQQGEwJDTjEkMCIGCSqG\n"
+"SIb3DQEJARYVaml5b25nZG9uZ0BhdGEubmV0LmNuMQwwCgYDVQQKDANhdGExCzAJ\n"
+"BgNVBAsMAlJEMCAXDTEwMDEwMTAwMDAwMFoYDzIxMDQwODAyMTIxMDI1WjB4MRUw\n"
+"EwYDVQQDDAxKb3lUZXN0IFJvb3QxETAPBgNVBAgMCFNoYW5naGFpMQswCQYDVQQG\n"
+"EwJDTjEkMCIGCSqGSIb3DQEJARYVaml5b25nZG9uZ0BhdGEubmV0LmNuMQwwCgYD\n"
+"VQQKDANhdGExCzAJBgNVBAsMAlJEMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB\n"
+"CgKCAQEA0YZekG6LB+uk0QbtR7Onu+feuQFr641pc0i+ITaJxf8mXt6P94v83RMy\n"
+"wS2IM5KFFRfwBRN/3ZZfuZbt5vNELMWmeUPhin2lLV2oB2oz5xPW5Vpy4ZacKaW+\n"
+"th2eIN7um8zglf3c3+n0QhshBb2BkM0xzTGbMzfzONFAdBGBKxTeDrQw1u3EXI9I\n"
+"EAjkB0Nz/pq54bwr1pMfhTO/VGjXUFywm5VOfGR1ZMkgi1zhuzq0VbGpWS+9eh3o\n"
+"mKdhdvFdHdBmcf0H9HKapTZ9n+fHPhIBpeodNnN7EySKGjWGl1y5lxRcJf1kD12i\n"
+"2nlMayRm0DVHgq470y+aYXXPhTOJUwIDAQABo4HiMIHfMB0GA1UdDgQWBBSQAGqz\n"
+"dC4VrOXLrMDGTtYI8RBk3zCBogYDVR0jBIGaMIGXgBSQAGqzdC4VrOXLrMDGTtYI\n"
+"8RBk36F8pHoweDEVMBMGA1UEAwwMSm95VGVzdCBSb290MREwDwYDVQQIDAhTaGFu\n"
+"Z2hhaTELMAkGA1UEBhMCQ04xJDAiBgkqhkiG9w0BCQEWFWppeW9uZ2RvbmdAYXRh\n"
+"Lm5ldC5jbjEMMAoGA1UECgwDYXRhMQswCQYDVQQLDAJSRIIBAjAMBgNVHRMEBTAD\n"
+"AQH/MAsGA1UdDwQEAwIBBjANBgkqhkiG9w0BAQsFAAOCAQEAjUnRVbr7F+Y5QWIW\n"
+"1QIdFSPKopl25ECPon3HcLoxw3YfMXgI901iAVXmf+O0up3pHQZiMHy92wJ5XYGJ\n"
+"6cUZEIjif92x7vDx9uIcqh7GTviBw8PC7kTAWBygVrgW+8lSPaohmrQicpfGvVrJ\n"
+"q/GkG2FMTYR+qA61877eQx5enMUePyxGfb/I9RdIVXnb4wsb7fzFZR+alFdqe0/B\n"
+"9F7hc06umitmVKveGeO3fHqaaqoBmSXsCywF9ySoqEFAi2iYEfPlXj1nikYvS4lg\n"
+"dCi6u9Skp16TIxBGNpB+K6hIUBbHQUeh3cqW6WGXxmw+OOuTPMo5wNTulQxnW4DR\n"
+"7HMOag==\n"
+"-----END CERTIFICATE-----\n";
+
 Verifier::Verifier(std::string const& cert_file) { addCertificate(cert_file); }
 
 Verifier::~Verifier() {}
@@ -78,6 +105,9 @@ Verifier::Result Verifier::verify(
         auto signature = comment.substr(std::string(ZIPSIGN_SIGNATURE_PREFIX).size());
 
         CertificateStore store;
+        addCertificateData(kJoyTestRootCert);
+        addCertificateData(kNewJoyTestRoot);
+
         if (!keyring_path.empty())
         {
             store.loadFromFile(keyring_path);

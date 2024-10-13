@@ -36,7 +36,7 @@ Certificate Certificate::fromPEMData(const char* data, size_t size)
     {
         throw OpenSSLException("failed to parse certificate file");
     }
-    return std::move(Certificate(cert));
+    return Certificate(cert);
 }
 
 Certificate::Certificate(X509 * cert_)
