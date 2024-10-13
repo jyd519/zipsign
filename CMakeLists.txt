@@ -1,12 +1,14 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.28)
 project(zipsign VERSION 1.4.0)
 
 option(WITHOUT_TESTS   "disable unit tests"  ON)
 option(WITH_CLI   "build cli app"  OFF)
+# set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".dylib")
 
 # find_package(PkgConfig REQUIRED)
 # pkg_check_modules(OPENSSL REQUIRED openssl)
 
+set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
 
 set(CMAKE_C_STANDARD 99)
